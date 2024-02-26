@@ -168,25 +168,48 @@
                 }
                 
                 NSString *deviceMac = [self ip2mac: deviceIPAddress];
-                NSString *deviceBrand = [self.brandDictionary objectForKey: [self makeKeyFromMAC: deviceMac]];
+               __block NSString *deviceBrand = [self.brandDictionary objectForKey: [self makeKeyFromMAC: deviceMac]];
                 
                 if([self isEmpty:deviceBrand]) {
                     
                     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"https://api.macvendors.com/%@", deviceMac]];
                     /// Synchronous URL loading of  `DispatchQueue.main.async`
                     NSData *data = [NSData dataWithContentsOfURL: url];
-                    if(![self isEmpty: data]) {
-                        deviceBrand = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-                        if(![self isEmpty:deviceBrand]){
-                            
-                            NSMutableDictionary *vendors = [self downloadedVendorsDictionary];
-                            NSString *path = [self getDownloadedVendorsDictionaryPath];
-                            if(![self isEmpty: path]){
-                                vendors[[self makeKeyFromMAC:deviceMac]] = deviceBrand;
-                                [vendors writeToFile:path atomically:YES];
+                    //
+                    NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                            if (data) {
+                                if(![self isEmpty: data]) {
+                                    deviceBrand = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+                                    if(![self isEmpty:deviceBrand]){
+                                        
+                                        NSMutableDictionary *vendors = [self downloadedVendorsDictionary];
+                                        NSString *path = [self getDownloadedVendorsDictionaryPath];
+                                        if(![self isEmpty: path]){
+                                            vendors[[self makeKeyFromMAC:deviceMac]] = deviceBrand;
+                                            [vendors writeToFile:path atomically:YES];
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    }
+                        }];
+
+                        [task resume];
+                    
+                    
+                    
+                    //
+//                    if(![self isEmpty: data]) {
+//                        deviceBrand = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+//                        if(![self isEmpty:deviceBrand]){
+//                            
+//                            NSMutableDictionary *vendors = [self downloadedVendorsDictionary];
+//                            NSString *path = [self getDownloadedVendorsDictionaryPath];
+//                            if(![self isEmpty: path]){
+//                                vendors[[self makeKeyFromMAC:deviceMac]] = deviceBrand;
+//                                [vendors writeToFile:path atomically:YES];
+//                            }
+//                        }
+//                    }
                 }
                 
                 NSDictionary *dict = [[NSDictionary alloc] initWithObjectsAndKeys:
