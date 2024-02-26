@@ -174,7 +174,7 @@
                     
                     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"https://api.macvendors.com/%@", deviceMac]];
                     /// Synchronous URL loading of  `DispatchQueue.main.async`
-                    NSData *data = [NSData dataWithContentsOfURL: url];
+                   
                     //
                     NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                             if (data) {
