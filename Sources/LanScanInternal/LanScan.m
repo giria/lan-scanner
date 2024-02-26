@@ -168,6 +168,7 @@
                 }
                 
                 NSString *deviceMac = [self ip2mac: deviceIPAddress];
+                NSLog(@"Device mac %@", deviceMac);
                __block NSString *deviceBrand = [self.brandDictionary objectForKey: [self makeKeyFromMAC: deviceMac]];
                 
                 if([self isEmpty:deviceBrand]) {
