@@ -63,7 +63,7 @@
 @implementation LanScan
 
 - (id)initWithDelegate:(id<LANScanDelegate>)delegate {
-    deb(@"init scanner");
+    //deb(@"init scanner");
     self = [super init];
     if(self) {
         self.delegate = delegate;
@@ -112,7 +112,7 @@
 
 - (void)start {
     
-    deb(@"start scan for router: %@", [self getRouterIP]);
+   // deb(@"start scan for router: %@", [self getRouterIP]);
 
     //Initializing the dictionary that holds the Brands name for each MAC Address
 
@@ -148,7 +148,7 @@
 }
 
 - (void)stop {
-    deb(@"stop scan");
+   // deb(@"stop scan");
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -222,7 +222,7 @@
                 [self.delegate lanScanDidFindNewDevice: dict];
             } else {
                 // If debug mode is active
-                deb(@"%@", error);
+               // deb(@"%@", error);
             }
             
         }];
